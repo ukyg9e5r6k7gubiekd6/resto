@@ -1,0 +1,7 @@
+.git
+Dockerfile*
+.project
+.settings
+.gitattributes
+.gitignore
+.htaccess

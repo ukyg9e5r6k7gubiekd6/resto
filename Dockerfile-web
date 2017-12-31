@@ -1,0 +1,23 @@
+FROM php:apache
+ARG RESTO_HOME
+ARG RESTO_PASSWORD
+ARG PGHOST
+ARG PGUSER
+ENV RESTO_HOME=$RESTO_HOME
+ENV RESTO_PASSWORD=$RESTO_PASSWORD
+ENV PGHOST=$PGHOST
+ENV PGUSER=$PGUSER
+COPY . $RESTO_HOME/
+COPY apache.conf /etc/apache2/sites-available/000-default.conf
+# TODO: Custom PHP config
+RUN \
+  chgrp -R www-data $RESTO_HOME && \
+  apt-get update && \
+  mkdir -p /usr/share/man/man1 /usr/share/man/man7 && \
+  apt-get install -y postgresql-client libpq-dev && \
+  docker-php-ext-install pgsql && \
+  apt-get -y --purge remove libpq-dev
+CMD \
+  until psql -c '\q' ; do sleep 1 ; done ; \
+  $RESTO_HOME/_install/installDB.sh -F -p $RESTO_PASSWORD && \
+  apache2-foreground
