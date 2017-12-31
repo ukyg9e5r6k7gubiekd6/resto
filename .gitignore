@@ -11,3 +11,6 @@
 /include/config.dev.php
 /include/resto/Modules/Heatmap.php
 /_docs
+/.buildpath
+/.project
+/.settings
